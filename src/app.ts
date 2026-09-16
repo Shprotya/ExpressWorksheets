@@ -10,6 +10,18 @@ app.get("/ping", async (_req: Request, res: Response) => {
   });
 });
 
+app.get('/bananas', async (_req : Request, res: Response) => { 
+    res.json({ 
+        message: "this is bananas", 
+    }); 
+}); 
+
+app.get('/havana', async (_req: Request, res: Response) => { 
+    res.json({ 
+    message: "havana, ooh na-na", 
+    }); 
+});
+
 app.listen(PORT, () => {
   console.log("Server is running on port", PORT);
 });
