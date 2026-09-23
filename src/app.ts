@@ -1,8 +1,11 @@
 import express, { Application, Request, Response } from "express";
+import carRoutes from './routers/cars';
 
 const PORT = process.env.PORT || 5000;
 
 const app: Application = express();
+app.use('/api/v1/cars', carRoutes);
+app.use(express.json()); // Middleware to parse JSON request bodies
 
 // Middleware registered FIRST so it intercepts all incoming requests
 app.use((req, _res, next) => {
