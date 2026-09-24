@@ -7,7 +7,7 @@ import { authenticateKey } from "./middleware/auth.middleware";
 const port = env.port;
 
 const app: Application = express();
-app.use(authenticateKey);
+app.use('/api/v1/cars', authenticateKey, carRoutes);
 
 app.use(express.json()); // Middleware to parse JSON request bodies
 app.use('/api/v1/cars', carRoutes);
