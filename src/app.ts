@@ -1,11 +1,14 @@
 import express, { Application, Request, Response } from "express";
 import carRoutes from './routers/cars';
+import { env } from "./config/env";
+import { connectDB } from "./config/database";
 
-const PORT = process.env.PORT || 5000;
+const port = env.port;
 
 const app: Application = express();
-app.use('/api/v1/cars', carRoutes);
+
 app.use(express.json()); // Middleware to parse JSON request bodies
+app.use('/api/v1/cars', carRoutes);
 
 // Middleware registered FIRST so it intercepts all incoming requests
 app.use((req, _res, next) => {
@@ -31,6 +34,13 @@ app.get("/havana", async (_req: Request, res: Response) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log("Server is running on port", PORT);
-});
+const startServer = async () => {
+  await connectDB();
+
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+
+};
+
+startServer();

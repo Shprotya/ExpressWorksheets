@@ -6,3 +6,6 @@ package-lock.json
 
 # build folder 
 build 
+
+
+.env
