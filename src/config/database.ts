@@ -1,5 +1,4 @@
 import { env } from '../config/env';
-
 import mongoose from 'mongoose';
 
 const uri = env.mongoURI;
