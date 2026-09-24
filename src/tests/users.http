@@ -5,8 +5,8 @@ POST {{endpoint}} HTTP/1.1
 content-type: application/json
 
 {
-  "make": "Toyota",
-  "model": "Camry"
+  "make": "Citroen",
+  "model": "C4"
 }
 
 ###
