@@ -6,8 +6,9 @@ import { connectDB } from "./config/database";
 const port = env.port;
 
 const app: Application = express();
-app.use('/api/v1/cars', carRoutes);
+
 app.use(express.json()); // Middleware to parse JSON request bodies
+app.use('/api/v1/cars', carRoutes);
 
 // Middleware registered FIRST so it intercepts all incoming requests
 app.use((req, _res, next) => {

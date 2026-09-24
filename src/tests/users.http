@@ -4,6 +4,10 @@
 POST {{endpoint}} HTTP/1.1
 content-type: application/json
 
+{
+  "make": "Toyota",
+  "model": "Camry"
+}
 
 ###
 GET  {{endpoint}} HTTP/3.0
