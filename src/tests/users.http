@@ -12,8 +12,8 @@ POST {{endpoint}} HTTP/1.1
 content-type: application/json
 
 {
-  "make": "Ford",
-  "model": "F-15"
+  "make": "Lockheed Martin",
+  "model": "F-22 Raptor",
 }
 
 ###
