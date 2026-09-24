@@ -1,6 +1,12 @@
 @endpoint = http://localhost:5000/api/v1/cars
 
 ###
+GET http://localhost:5000/api/v1/cars HTTP/1.1
+content-type: application/json
+x-api-key: blahblah
+
+
+###
 # @name PostACar
 POST {{endpoint}} HTTP/1.1
 content-type: application/json
