@@ -3,6 +3,7 @@ import carRoutes from './routers/cars';
 import { env } from "./config/env";
 import { connectDB } from "./config/database";
 import { authenticateKey } from "./middleware/auth.middleware";
+import { requestLogger } from "./middleware/requestLgger";
 
 const port = env.port;
 
@@ -13,10 +14,7 @@ app.use(express.json()); // Middleware to parse JSON request bodies
 app.use('/api/v1/cars', carRoutes);
 
 // Middleware registered FIRST so it intercepts all incoming requests
-app.use((req, _res, next) => {
-  console.log(`${req.method} ${req.originalUrl}`);
-  next();
-});
+app.use(requestLogger);
 
 app.get("/ping", async (_req: Request, res: Response) => {
   res.json({
