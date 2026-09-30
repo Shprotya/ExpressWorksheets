@@ -8,13 +8,12 @@ import { requestLogger } from "./middleware/requestLgger";
 const port = env.port;
 
 const app: Application = express();
-app.use('/api/v1/cars', authenticateKey, carRoutes);
-
-app.use(express.json()); // Middleware to parse JSON request bodies
-app.use('/api/v1/cars', carRoutes);
 
 // Middleware registered FIRST so it intercepts all incoming requests
 app.use(requestLogger);
+
+app.use(express.json()); // Middleware to parse JSON request bodies
+app.use('/api/v1/cars', authenticateKey, carRoutes);
 
 app.get("/ping", async (_req: Request, res: Response) => {
   res.json({

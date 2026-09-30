@@ -7,7 +7,7 @@ const carController = new CarController();
 
 router.get('/', carController.getCars);
 
-router.get('/:id', carController.getCarById);
+router.get('/:id', authenticateKey, carController.getCarById);
 router.post('/', authenticateKey, carController.createCar);
 router.put('/:id', carController.updateCar);
 router.delete('/:id', carController.deleteCar);

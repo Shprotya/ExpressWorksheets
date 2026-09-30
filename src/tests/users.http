@@ -13,8 +13,9 @@ content-type: application/json
 x-api-key: blahblah
 
 {
-  "make": "Lockheed Martin",
-  "model": "F-22 Raptor"
+  "make": "kia",
+  "model": "soul",
+  "year": 1999
 }
 
 ###
