@@ -7,6 +7,12 @@ export const createCarSchemaZod = z.object({
     year: z.number().min(1950).optional()
 });
 
+export const updateCarSchemaZod = z.object({
+    make: z.string().min(1),
+    model: z.string().min(1),
+    year: z.number().min(1950).optional()
+});
+
 export interface ICar {
     make: string;
     model: string;
