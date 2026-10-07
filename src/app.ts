@@ -4,6 +4,8 @@ import { env } from "./config/env";
 import { connectDB } from "./config/database";
 import { authenticateKey } from "./middleware/auth.middleware";
 import { requestLogger } from "./middleware/requestLgger";
+import { swaggerSpec } from "./config/swagger";
+import swaggerUi from 'swagger-ui-express';
 
 const port = env.port;
 
@@ -14,6 +16,13 @@ app.use(requestLogger);
 
 app.use(express.json()); // Middleware to parse JSON request bodies
 app.use('/api/v1/cars', authenticateKey, carRoutes);
+
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec)
+);
+
 
 app.get("/ping", async (_req: Request, res: Response) => {
   res.json({

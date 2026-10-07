@@ -16,3 +16,5 @@ const options: swaggerJSDoc.Options = {
     },
     apis: ['./src/controllers/*.ts']
 };
+
+export const swaggerSpec = swaggerJSDoc(options);
