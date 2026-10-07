@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { CarService } from '../services/cars';
-import { carSchemaZod } from '../models/cars';
+import { createCarSchemaZod } from '../models/cars';
 
 const carService = new CarService();
 
@@ -34,7 +34,7 @@ export class CarController {
 
 
     createCar = async (req: Request, res: Response): Promise<void> => {
-        const validation = carSchemaZod.safeParse(req.body);
+        const validation = createCarSchemaZod.safeParse(req.body);
 
         console.log(validation);
 
