@@ -15,12 +15,12 @@ const app: Application = express();
 app.use(requestLogger);
 
 app.use(express.json()); // Middleware to parse JSON request bodies
-app.use('/api/v1/cars', authenticateKey, carRoutes);
+app.use('/api/v1/cars', carRoutes);
 
 app.use(
   '/api-docs',
   swaggerUi.serve,
-  swaggerUi.setup(swaggerSpec)
+  swaggerUi.setup(swaggerSpec)  
 );
 
 
