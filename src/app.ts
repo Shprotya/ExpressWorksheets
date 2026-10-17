@@ -4,12 +4,14 @@ import { authenticateKey } from "./middleware/auth.middleware";
 import { requestLogger } from "./middleware/requestLgger";
 import { swaggerSpec } from "./config/swagger";
 import swaggerUi from 'swagger-ui-express';
+import cors from 'cors';
 
 export const app: Application = express();
 
 // Middleware registered FIRST so it intercepts all incoming requests
 app.use(requestLogger);
 
+app.use(cors());
 app.use(express.json()); // Middleware to parse JSON request bodies
 app.use('/api/v1/cars', carRoutes);
 
