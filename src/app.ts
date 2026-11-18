@@ -5,6 +5,7 @@ import { requestLogger } from "./middleware/requestLgger";
 import { swaggerSpec } from "./config/swagger";
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
+import { errorHandler } from "./middleware/errorhandler";
 
 export const app: Application = express();
 
@@ -12,6 +13,7 @@ export const app: Application = express();
 app.use(requestLogger);
 
 app.use(cors());
+app.use(errorHandler)
 app.use(express.json()); // Middleware to parse JSON request bodies
 app.use('/api/v1/cars', carRoutes);
 
