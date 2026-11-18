@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import {z} from 'zod';
+import { z } from 'zod';
 
 /**
  * @openapi
@@ -22,6 +22,13 @@ import {z} from 'zod';
  *           example: 2010
  */
 
+export const carParamsSchema = z.object({
+    params: z.object({
+        id: z
+            .string()
+            .regex(/^[0-9a-fA-F]{24}$/, 'Invalid ObjectId')
+    })
+});
 
 
 export const createCarSchemaZod = z.object({
@@ -30,11 +37,14 @@ export const createCarSchemaZod = z.object({
     year: z.number().min(1950).optional()
 });
 
-export const updateCarSchemaZod = z.object({
-    make: z.string().min(1),
-    model: z.string().min(1),
-    year: z.number().min(1950).optional()
+export const updateCarZSchema = z.object({
+    body: z.object({
+        make: z.string().min(1),
+        model: z.string().min(1),
+        year: z.number().min(1950).optional(),
+    }),
 });
+
 
 export interface ICar {
     make: string;
