@@ -1,5 +1,5 @@
 @endpoint = http://localhost:5000/api/v1/cars
-@id = 6afd9c06612d5f3d64bebf97
+@id = 6afd9c06612d5f3d64bebf
 
 ###
 GET http://localhost:5000/api/v1/cars HTTP/1.1
