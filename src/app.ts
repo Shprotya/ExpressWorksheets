@@ -1,6 +1,5 @@
 import express, { Application, Request, Response } from "express";
 import carRoutes from './routers/cars';
-import { authenticateKey } from "./middleware/auth.middleware";
 import { requestLogger } from "./middleware/requestLgger";
 import { swaggerSpec } from "./config/swagger";
 import swaggerUi from 'swagger-ui-express';
