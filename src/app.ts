@@ -1,11 +1,11 @@
 import express, { Application, Request, Response } from "express";
 import carRoutes from './routers/cars';
-import { authenticateKey } from "./middleware/auth.middleware";
 import { requestLogger } from "./middleware/requestLgger";
 import { swaggerSpec } from "./config/swagger";
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
 import { errorHandler } from "./middleware/errorhandler";
+import authRoutes from './routers/auth';
 
 export const app: Application = express();
 
@@ -13,9 +13,9 @@ export const app: Application = express();
 app.use(requestLogger);
 
 app.use(cors());
-app.use(errorHandler)
 app.use(express.json()); // Middleware to parse JSON request bodies
 app.use('/api/v1/cars', carRoutes);
+app.use('/api/v1/auth', authRoutes);
 
 app.use(
   '/api-docs',
@@ -41,3 +41,6 @@ app.get("/havana", async (_req: Request, res: Response) => {
     message: "havana, ooh na-na",
   });
 });
+
+// Error handler must be registered LAST, after all routes
+app.use(errorHandler);

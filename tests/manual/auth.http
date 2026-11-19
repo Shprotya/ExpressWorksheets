@@ -1,0 +1,209 @@
+@endpoint = http://localhost:5000/api/v1
+
+### 1. Register a valid user -> 201, returns _id, name, email (no hash)
+POST {{endpoint}}/auth/register HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Lisa",
+  "email": "lisakareeva@example.com",
+  "password": "difficult password"
+}
+
+### 2. Email is lowercased -> stored as "mixed@example.com"
+POST {{endpoint}}/auth/register HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Mixed Case",
+  "email": "MiXeD@Example.COM",
+  "password": "difficult password"
+}
+
+### 3. Same email registered twice -> should NOT create a second user
+POST {{endpoint}}/auth/register HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Lisa Again",
+  "email": "lisa@example.com",
+  "password": "another password"
+}
+
+### 4. Missing name -> 400
+POST {{endpoint}}/auth/register HTTP/1.1
+content-type: application/json
+
+{
+  "email": "noname@example.com",
+  "password": "difficult password"
+}
+
+### 5. Empty name -> 400
+POST {{endpoint}}/auth/register HTTP/1.1
+content-type: application/json
+
+{
+  "name": "",
+  "email": "empty@example.com",
+  "password": "difficult password"
+}
+
+### 6. Invalid email -> 400
+POST {{endpoint}}/auth/register HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Bad Email",
+  "email": "not-an-email",
+  "password": "difficult password"
+}
+
+### 7. Password too short (5 chars, min is 6) -> 400
+POST {{endpoint}}/auth/register HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Shorty",
+  "email": "short@example.com",
+  "password": "12345"
+}
+
+### 8. Password too long (65 chars, max is 64) -> 400
+POST {{endpoint}}/auth/register HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Longy",
+  "email": "long@example.com",
+  "password": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+}
+
+### 9. Wrong type (password is a number) -> 400
+POST {{endpoint}}/auth/register HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Numbers",
+  "email": "numbers@example.com",
+  "password": 123456
+}
+
+### 10. Empty body -> 400, lists all three missing fields
+POST {{endpoint}}/auth/register HTTP/1.1
+content-type: application/json
+
+{}
+
+###############  LOGIN  ###############
+
+### 11. Login with correct details -> 200, { "token": "..." }
+# @name login
+POST {{endpoint}}/auth/login HTTP/1.1
+content-type: application/json
+
+{
+  "email": "lisa@example.com",
+  "password": "difficult password"
+}
+
+### 12. Login with wrong password -> 401
+POST {{endpoint}}/auth/login HTTP/1.1
+content-type: application/json
+
+{
+  "email": "lisa@example.com",
+  "password": "wrong password"
+}
+
+### 13. Login as a user who doesn't exist -> 401 (same message as 12)
+POST {{endpoint}}/auth/login HTTP/1.1
+content-type: application/json
+
+{
+  "email": "nobody@example.com",
+  "password": "difficult password"
+}
+
+### 14. Login with invalid body -> 400
+POST {{endpoint}}/auth/login HTTP/1.1
+content-type: application/json
+
+{
+  "email": "not-an-email"
+}
+
+###############  PROTECTED ROUTES  ###############
+# Send request 11 (# @name login) first - tokens expire after 2 minutes,
+# so re-send it if you start getting "Invalid or expired token".
+
+@accessToken = {{login.response.body.token}}
+# Replace with the id of one of your own cars (GET /cars to find one)
+@carId = 6ab53c71b568f79167c8187a
+
+### 15. Who am I? -> 200, { _id, name, email } taken from the token
+GET {{endpoint}}/auth/me HTTP/1.1
+Authorization: Bearer {{accessToken}}
+
+### 16. /me without a token -> 401
+GET {{endpoint}}/auth/me HTTP/1.1
+
+### 17. /me with a made-up token -> 401 "Invalid or expired token"
+GET {{endpoint}}/auth/me HTTP/1.1
+Authorization: Bearer this.is.notvalid
+
+### 18. Wrong scheme (not "Bearer") -> 401
+GET {{endpoint}}/auth/me HTTP/1.1
+Authorization: Basic {{accessToken}}
+
+### 19. GET cars is still public -> 200, no token needed
+GET {{endpoint}}/cars HTTP/1.1
+
+### 20. Create a car without a token -> 401
+POST {{endpoint}}/cars HTTP/1.1
+content-type: application/json
+
+{
+  "make": "Kia",
+  "model": "Ceed",
+  "year": 2020
+}
+
+### 21. Create a car with a token -> 201
+# @name createdCar
+POST {{endpoint}}/cars HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "make": "Kia",
+  "model": "Ceed",
+  "year": 2020
+}
+
+### 22. Update the car you just created (uses its _id from 21) -> 200
+PUT {{endpoint}}/cars/{{createdCar.response.body._id}} HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "make": "Kia",
+  "model": "Sportage",
+  "year": 2022
+}
+
+### 23. Delete a car without a token -> 401
+DELETE {{endpoint}}/cars/{{carId}} HTTP/1.1
+
+### 24. Delete with a token but an invalid id -> 400
+# (validation runs AFTER authentication, so you only see this once you're logged in)
+DELETE {{endpoint}}/cars/not-a-real-id HTTP/1.1
+Authorization: Bearer {{accessToken}}
+
+### 25. Delete the car you created in 21 -> 200
+DELETE {{endpoint}}/cars/{{createdCar.response.body._id}} HTTP/1.1
+Authorization: Bearer {{accessToken}}
+
+### 26. Delete one of your own cars (set @carId above) -> 200
+DELETE {{endpoint}}/cars/{{carId}} HTTP/1.1
+Authorization: Bearer {{accessToken}}
