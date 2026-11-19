@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { ValidationError } from "../utils/apperrors";
+import { AppError, ValidationError } from "../utils/apperrors";
 
 
 export const errorHandler = (err: Error, _req: Request, res: Response, _next: NextFunction) => {
@@ -17,6 +17,15 @@ export const errorHandler = (err: Error, _req: Request, res: Response, _next: Ne
         return;
     }
 
+    // Any other AppError (NotFound, UserAlreadyExists, Unauthorized...) uses its own status code
+    if (err instanceof AppError) {
+        res.status(err.statusCode).json({
+            success: false,
+            message: err.message
+        });
+
+        return;
+    }
 
 
     res.status(500).json({

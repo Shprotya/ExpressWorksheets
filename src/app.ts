@@ -14,7 +14,6 @@ export const app: Application = express();
 app.use(requestLogger);
 
 app.use(cors());
-app.use(errorHandler)
 app.use(express.json()); // Middleware to parse JSON request bodies
 app.use('/api/v1/cars', carRoutes);
 app.use('/api/v1/auth', authRoutes);
@@ -43,3 +42,6 @@ app.get("/havana", async (_req: Request, res: Response) => {
     message: "havana, ooh na-na",
   });
 });
+
+// Error handler must be registered LAST, after all routes
+app.use(errorHandler);
