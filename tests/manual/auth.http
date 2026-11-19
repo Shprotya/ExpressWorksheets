@@ -94,3 +94,41 @@ POST {{endpoint}}/register HTTP/1.1
 content-type: application/json
 
 {}
+
+###############  LOGIN  ###############
+
+### 11. Login with correct details -> 200, { "token": "..." }
+# @name login
+POST {{endpoint}}/login HTTP/1.1
+content-type: application/json
+
+{
+  "email": "lisa@example.com",
+  "password": "difficult password"
+}
+
+### 12. Login with wrong password -> 401
+POST {{endpoint}}/login HTTP/1.1
+content-type: application/json
+
+{
+  "email": "lisa@example.com",
+  "password": "wrong password"
+}
+
+### 13. Login as a user who doesn't exist -> 401 (same message as 12)
+POST {{endpoint}}/login HTTP/1.1
+content-type: application/json
+
+{
+  "email": "nobody@example.com",
+  "password": "difficult password"
+}
+
+### 14. Login with invalid body -> 400
+POST {{endpoint}}/login HTTP/1.1
+content-type: application/json
+
+{
+  "email": "not-an-email"
+}
