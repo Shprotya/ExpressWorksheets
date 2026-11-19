@@ -21,7 +21,10 @@ export const validate = (schema: z.ZodObject<any>) => (
         return;
     }
 
-    req.body = validation.data.body;
+    // only overwrite the body if this schema actually validated one
+    if (validation.data.body !== undefined) {
+        req.body = validation.data.body;
+    }
 
     next();
 };
